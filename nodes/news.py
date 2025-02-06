@@ -1,6 +1,11 @@
 from typing import Dict, Any, List
-from autotask.nodes import Node, register_node
+try:
+    from autotask.nodes import Node, register_node
+except:
+    from ..stub import Node, register_node
 import requests
+from ..envParams import ENV_PARAMS
+
 
 @register_node
 class BingNewsSearchNode(Node):
@@ -20,12 +25,6 @@ class BingNewsSearchNode(Node):
             "type": "INT",
             "default": 10,
             "required": False
-        },
-        "api_key": {
-            "label": "API Key",
-            "description": "Bing Search API Key",
-            "type": "STRING",
-            "required": True
         }
     }
 
@@ -39,12 +38,13 @@ class BingNewsSearchNode(Node):
 
     def __init__(self):
         self.base_url = "https://api.bing.microsoft.com/v7.0/news/search"
+        self.api_key = ENV_PARAMS.BING_API_KEY.value
 
     def execute(self, node_inputs: Dict[str, Any], workflow_logger) -> Dict[str, Any]:
         try:
             query = node_inputs["query"]
             count = min(max(node_inputs.get("count", 10), 1), 100)  # 限制在1-100之间
-            api_key = node_inputs["api_key"]
+            api_key = self.api_key
 
             headers = {"Ocp-Apim-Subscription-Key": api_key}
             params = {

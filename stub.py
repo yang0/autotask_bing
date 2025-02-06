@@ -5,6 +5,12 @@ def register_node(cls):
     """Development environment stub decorator"""
     return cls
 
+class EnvParam:
+    """环境参数类，包含值和描述"""
+    def __init__(self, value: str, description: str):
+        self.value = value
+        self.description = description
+
 class Node(ABC):
     """Base node class for development environment"""
     NAME: str = ""
