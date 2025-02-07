@@ -40,10 +40,13 @@ class BingNewsSearchNode(Node):
         self.base_url = "https://api.bing.microsoft.com/v7.0/news/search"
         self.api_key = ENV_PARAMS.BING_API_KEY.value
 
-    def execute(self, node_inputs: Dict[str, Any], workflow_logger) -> Dict[str, Any]:
+    async def execute(self, node_inputs: Dict[str, Any], workflow_logger) -> Dict[str, Any]:
         try:
             query = node_inputs["query"]
-            count = min(max(node_inputs.get("count", 10), 1), 100)  # 限制在1-100之间
+            count = int(node_inputs.get("count", 10))
+            count = min(max(count, 1), 100)  # 限制在1-100之间
+            
+
             api_key = self.api_key
 
             headers = {"Ocp-Apim-Subscription-Key": api_key}
